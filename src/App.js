@@ -78,7 +78,6 @@ class App extends React.Component {
       )
 
       const response = await api_call.json()
-      console.log(response)
 
       if(response.cod !== '404'){
           this.setState({
