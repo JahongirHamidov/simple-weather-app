@@ -1,13 +1,11 @@
 import React from "react"
 import "./App.css"
-import Form from "./app_component/form.component"
-import Weather from "./app_component/weather.component"
+import Form from "./components/form"
+import Weather from "./components/weather"
 import "bootstrap/dist/css/bootstrap.min.css"
-
-// git project https://github.com/erikflowers/weather-icons
 import "weather-icons/css/weather-icons.css"
 
-const Api_Key = "9d338d844a7bffd71902ffe0d3b6a201"
+const api_key = "9d338d844a7bffd71902ffe0d3b6a201"
 
 class App extends React.Component {
   constructor() {
@@ -76,26 +74,29 @@ class App extends React.Component {
 
     if (country && city) {
       const api_call = await fetch(
-        `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${Api_Key}`
+        `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${api_key}`
       )
 
       const response = await api_call.json()
+      console.log(response)
 
-      this.setState({
-        city: `${response.name}, ${response.sys.country}`,
-        country: response.sys.country,
-        main: response.weather[0].main,
-        celsius: this.calCelsius(response.main.temp),
-        temp_max: this.calCelsius(response.main.temp_max),
-        temp_min: this.calCelsius(response.main.temp_min),
-        description: response.weather[0].description,
-        error: false,
+      if(response.cod !== '404'){
+          this.setState({
+            city: `${response.name}, ${response.sys.country}`,
+            country: response.sys.country,
+            main: response.weather[0].main,
+            celsius: this.calCelsius(response.main.temp),
+            temp_max: this.calCelsius(response.main.temp_max),
+            temp_min: this.calCelsius(response.main.temp_min),
+            description: response.weather[0].description,
+            error: false,
       })
 
       // seting icons
       this.get_WeatherIcon(this.weatherIcon, response.weather[0].id)
 
       console.log(response)
+    } else this.setState({error:true})
     } else {
       this.setState({
         error: true
